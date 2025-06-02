@@ -1,0 +1,194 @@
+ros2 run turtlesim turtlesim_node -> runs a premade node with a turtle gui 
+
+ros2 run turtlesim turtle_teleop_key -> allows you to create a client server connection from one node to the other
+
+ros2 has built-in executable packages 
+
+ros2 pkg list -> shows you the list of packages
+
+ros2 pkg executables turtlesim -> executable packages for turtlesim
+
+
+node <-> topics, services, actions <-> node
+
+ros2 node list -> list of the current nodes running
+
+/turtlesim is a node
+
+ros2 node info /turtlesim -> gives us info about the /turtlesim node
+
+
+
+
+node (publisher) - topics - node (subscriber)
+
+subscribes to topic to recieve data by the publisher
+
+ros2 topic list -> shows all the topics available (for example: /turtle1/cmd_vel, /turtle1/pose, etc.)
+
+with -t, we can see the type that is associated with the topic
+
+rqt_graph shows a graph of your topic/node created system 
+
+Between /turtlesim and /teleop_turtle there are topics like /turtle1/rotate_absolute that make the turtle rotate_absolute
+
+ros2 topic echo <topic_name> gives us the output type of the topic selected
+
+If we do it with /turtle1/pose while the turtle is moving, it will show in real time the instantaneous positions of the turtle
+
+ros2 topic info <topic_name> gives us info about the topic 
+
+ros2 interface show <type> shows the interface definition of the given type 
+
+You can publish data to a topic using this command:
+
+ros2 topic pub --once <topic_name> <type> "<args of the type>"
+
+change the once to --rate <x> if you want to publish data to a topic at a specific rate 
+
+ros2 topic hz <topic_name> -> shows us the topic frequency
+
+normally, we want to publish movements into a node
+
+
+
+
+node (server) - service - node (client)
+
+ros2 service list -> list of services available  add -t for types
+
+ros2 service type <service_name> -> shows the type of a specified service
+
+ros2 service find <service_type> -> find service by type
+
+we can also run ros2 interface show <type> for service types
+
+ros2 service call <service_name> <service_type> 
+
+For example, ros2 service call /clear std_srvs/srv/Empty clears your current path in /turtlesim
+
+normally, to modify the nodes (by adding, deleting, etc.) we use a service and not topics
+
+
+
+
+
+We can pass multiple parameters into a node
+
+These parameters include the background of the /turtlesim, the color of the turtle, etc.
+
+ros2 param list -> shows a list of parameters
+
+ros2 param get <node_name> <param_name> -> gives you the value of the parameter in the specified node
+
+An example of a parameter is background-g
+
+ros2 param set <node_name> <param_name> <value> -> changes the value of the parameter in the specified node
+
+ros2 param dump <node_name> -> dumps all params of a node into the terminal
+
+Add a > turtlesim.yaml to dump the params of the node into a .yaml file 
+
+ros2 param load <node_name> <.yaml file_name> -> loads the specified params of your file into the current node
+
+ros2 run turtlesim turtlesim_node --ros-args --params-file <file_name> -> runs the node with the specified params in the file 
+
+
+
+
+node (server) - actions : goal, feedback, results - node (client)
+
+ros2 action list -> shows all the current actions running  (add -t for action type)
+
+ros2 action info <action_name> -> shows the info about the current actions 
+
+An example would be: action clients: 1 /teleop_turtle action servers: 1 /turtlesim
+
+ros2 action send_goal <action_name> <action_type> <goal>
+
+A goal wuld be somethign like "{theta: 1.57}". This would rotate the turtle by that angle in radians
+
+
+
+
+In ROS2, topics are used for continuous data streams, like sensor data or robot state,
+while actions are used for long-running tasks that require feedback and cancellation, 
+like moving a robot to a waypoint. Topics are asynchronous and unidirectional, while actions
+offer feedback and are preemptable can be canceled in progress
+
+
+To create your project, you want to mkdir and cd into the directory
+
+You can git clone source code for ros2 if needed
+
+use echo "source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash" >> ~/.bashrc to setup the tab completion of your workspace into bash
+
+colcon build --symlink-install will create the needed files and folders in the directory
+
+add the end, you do :
+
+source install/local_setup.bash  to source overlay
+
+Then, we can run the package that we created and we can modify it with the different files that contain it
+
+To create your own package after having created your new workspace from the src folder, you do this:
+
+ros2 pkg create --build-type ament_cmake --node-name <node_name> <package_name>
+
+After creating our package we want to build it 
+
+we go into the main workspace dir and we build it:
+
+colcon build --packages-select <package_name> 
+
+we source it:
+
+source install/local_setup.bash 
+
+and then we can run our own node :
+
+ros2 run my_package my_node
+
+
+
+We are also interested in creating our own publisher and subscriber package (that we can do in c++ or python)
+
+to create a pub and sub package in your workspace, we do this:
+
+
+A typical publisher has these modules:
+
+
+#include <chrono>
+#include <functional>
+#include <memory>
+#include <string>
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+using namespace std::chrono_literals;
+
+
+you can run a dependency check with this command:
+
+rosdep install -i --from-path src --rosdistro humble -y
+
+and once you finish a package, you build it:
+
+colcon build --packages-select <package_name>
+
+at the end, there is going to be a talker and a listener
+
+
+
+In one terminal you do 
+
+source install/local_setup.bash 
+
+ros2 run <package_name> talker
+
+and on the other:
+
+source install/local_setup.bash 
+
+ros2 run <package_name> listener
+
