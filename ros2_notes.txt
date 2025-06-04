@@ -151,6 +151,7 @@ ros2 run my_package my_node
 
 
 
+
 We are also interested in creating our own publisher and subscriber package (that we can do in c++ or python)
 
 to create a pub and sub package in your workspace, we do this:
@@ -191,4 +192,161 @@ and on the other:
 source install/local_setup.bash 
 
 ros2 run <package_name> listener
+
+
+
+You can launch different nodes directly with a python script instead of manually running all nodes on the terminal
+
+ExecuteProcess allows you to run ros2 terminal commands directly from the lanch file
+
+At the end, you return LaunchDescription with all of your nodes
+
+To launch the file containing all the nodes you want to run, we do this command:
+
+ros2 launch <package_name> <launch_file>
+
+For example, we would do:
+
+ros2 launch gazebo_tutorial gazebo.launch.py
+
+
+
+URDF files 
+
+It's a way to describe your specified robot
+
+There are different properties likes rpy and rpz
+
+Unified robotics description format
+
+Visual, physics, connections, joints, links
+
+
+It looks something like this:
+
+<?xml version= "1.0"?>
+<robot name= "robot_name">
+    <link name= "link_name">
+        <visual>
+            <geometry>
+            </geometry>
+            <origin rpy= "r p y" xyz = "x y z"/>
+            <material name= "color_name"/>
+                <color rgba = "r g b a"/>
+            <material/>
+        </visual>
+
+        <collision>
+            <geometry>
+            </geometry>
+            <origin rpy= "r p y" xyz = "x y z"/>
+        </collision>
+
+        <inertial>
+            <mass value= "mass_value_in_kg"/>
+            <inertia
+                ixx = "ixx" ixy = "ixy" ixz = "ixz"
+                iyy = "iyy" iyz = "iyz"
+                izz = "izz"/>
+        </inertial>
+    </link>
+
+    <joint name= "joint_name" type= "joint_type"> 
+        <parent link= "parent_link_name"/>
+        <child link= "child_link_name"/>
+        <origin rpy= "r p y" xyz= "x y z"/>
+        <axis rpy= "r p y" xyz= "x y z"/>
+        <limit lower= "lower" upper= "upper"
+effort= "max_effort" velocity= "max_vel"/>
+        <dynamics damping= "damping_coeff" friction= "fric_coeff"/>
+    </joint>
+</robot>
+
+
+
+A link is used to describe a segment of a robot
+You define visual, collision and inertial properties
+
+The geometry and origin are used in the visual and collision properties
+to describe the location and the shape of the link at those properties
+
+You can export .stl files for the geometry
+
+For geometry:
+
+<box size= "x y z"/>
+<sphere radius= "r"/>
+<cylinder radius= "r" length= "l"/>
+
+The mesh is used to import specific pieces that you have created in cad model software as .stl or .dae files.
+
+<mesh filename = "file_path" scale = "x y z"/>
+
+
+For the origin, to describe the rotation position, we use
+roll (x) pitch (y) yaw (z) in radians
+
+Relative to the link's coordinate frame
+
+We apply rotation and then translation
+
+
+For visual and collision, origin describes how the geometry is transformed
+relative to the link's frame 
+
+For inertial, origin describes the location of the center of mass
+relative to the link's frame
+
+Some common colors:
+
+red is 1 0 0 1
+blue is 0 0 1 1
+green is 0 1 0 1
+yellow is 1 1 0 1
+cyan is 0 1 1 1
+
+Inertia is in kgm^2
+
+https://www.youtube.com/watch?v=Ch-VTxTIt0E&ab_channel=MichelvanBiezen 
+
+This is the inertia matrix
+
+We would launch the urdf using this command:
+
+ros2 launch <package_name> <file_name> model:<urdf_file_path inside package> 
+
+Example:
+
+ros2 launch urdf_tutorial display_launch.py model:=urdf/01-simple-link.urdf
+
+joints describe connections between two links: a parent link and a child link 
+
+A damping coefficient, or damping constant, quantifies how quickly an oscillating system returns to equilibrium due to energy dissipation
+Damping is expressed in N s/m
+
+These are the types of joints:
+
+fixed: no movement
+continuous: rotation about axis, no limit
+revolute: rotation about axis, with limits in radians
+prismatic: translation about axis
+floating: six degrees of freedom (3 translational 3 rotational)
+planar: motion on plan (2 translation and 1 rotation)
+
+Degrees of freedom video:
+
+https://www.youtube.com/watch?v=ah7Wm0FHKvI&ab_channel=Mecharithm-RoboticsandMechatronics
+
+Refer to this repo for ros2 simulation examples:
+
+https://github.com/madibabaiasl 
+
+Limits are for prismatic revolute joints only
+
+Lower and upper fields are in radians or meters
+
+effort: max effort in Nm 
+velocity: max velocity rad/s
+
+Example of a robot: 16 links and 15 joints
 
