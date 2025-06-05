@@ -1,3 +1,7 @@
+Link for the video: https://www.youtube.com/watch?v=HJAE5Pk8Nyw&list=WL&index=287&ab_channel=KevinWood%7CRobotics%26AI 
+
+
+
 ros2 run turtlesim turtlesim_node -> runs a premade node with a turtle gui 
 
 ros2 run turtlesim turtle_teleop_key -> allows you to create a client server connection from one node to the other
@@ -350,3 +354,58 @@ velocity: max velocity rad/s
 
 Example of a robot: 16 links and 15 joints
 
+
+
+
+Xacro files
+
+Function that you can call inside urdf files
+
+The files would have this form: .xacro.urdf
+
+convert .xacro files into .urdf files
+
+robot state publisher:
+
+path_to_urdf = ....
+
+robot_state_publisher_node = launch_ros.actions.Node(
+    package = 'robot_state_publisher',
+    executable = 'robot_state_publisher',
+    parameters = [{
+        'robot_description': ParameterValue(
+            Command(['xacro ', str(path_to_urdf)]),
+value_type=str
+        )
+    }]
+
+
+)
+
+Inside the parameter, we run the xacro command to turn the .xacro file into a .urdf file
+
+Xacro properties allow you to change a property that appears in multiple locations inside of a .urdf file 
+
+<xacro:property name= "property_name" value = "..."/>
+
+to use the property, we would implement it like this:
+
+<... variable = "${property_name}" .../>
+
+You can set up input parameters, which can replace multiple lines of xml code.
+
+<xacro:macro name= "macro_name" params= "param-1 param-2 ... param-n"/>
+
+</xacro:macro>
+
+To use it, we would do:
+
+<xacro:macro_name param1= "value"/>
+
+ros2 launch urdf_tutorial display.launch.py model:=<urdf xacrofile name>
+
+You can also do a separate .xacro file and include its properties in the .urdf.xacro file
+
+<?xml version= "1.0"?>
+
+<robot xmlns:xacro = 
