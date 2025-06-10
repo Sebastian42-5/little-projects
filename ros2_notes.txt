@@ -215,6 +215,7 @@ ros2 launch gazebo_tutorial gazebo.launch.py
 
 
 
+
 URDF files 
 
 It's a way to describe your specified robot
@@ -408,4 +409,60 @@ You can also do a separate .xacro file and include its properties in the .urdf.x
 
 <?xml version= "1.0"?>
 
-<robot xmlns:xacro = 
+<robot name = "my_robot" xmlns:xacro = "http://ros.org/wiki/xacro"> 
+
+Then, you put all your xacro properties
+
+then, you put all the xacro macros 
+
+and </robot> at the end
+
+To use the xacro file in the main urdf.xacro file, we put this:
+
+<xacro:include filename= "filename.xacro" />
+
+
+Rviz lets you vizualize the motion of the robot 
+
+Don't forget to set your path to real path like this:
+
+ros2 launch urdf_tutorial display.launch.py model:=$(realpath ~/ros2_ws/src/mec_mobile/mec_mobile_description/urdf/robots/robot_3d.urdf.xacro)
+
+and before launching, always do:
+
+colcon build --packages-select <package_name>
+
+source install/setup.bash 
+
+You can test that everything works using:
+
+ros2 pkg list | grep <description_file_name>
+
+There are different types of .py files that are needed to launch a simulation 
+
+demo.launch.py 
+
+robot_state_publisher and state_publisher.py 
+
+There is also a setup.py 
+
+To launch an rviz simulation, we do:
+
+rviz2 -d install(directory to .rviz file)
+
+
+Normally, you create a package and then you modify the CMakeLists.txt and Package.xml files
+
+
+
+Installing gazebo and ros2 control
+
+Ros2 control yaml file and join publisher file to control the robot in gazebo 
+
+
+
+
+
+
+
+
