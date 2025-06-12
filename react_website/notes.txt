@@ -1,0 +1,3 @@
+To create the reactjs package, we do npm create vite@latest 
+
+we do npm run dev from the app folder to run the local server
