@@ -455,9 +455,21 @@ Normally, you create a package and then you modify the CMakeLists.txt and Packag
 
 
 
+
 Installing gazebo and ros2 control
 
 Ros2 control yaml file and join publisher file to control the robot in gazebo 
+
+Types of ros2 controllers to make your robot move in gazebo :
+
+effort_controllers position_controllers velocity_controllers
+
+state_interface reads data 
+
+command_interface sends data 
+
+position, velocity, effort
+
 
 
 
