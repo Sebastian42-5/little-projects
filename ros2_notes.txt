@@ -470,11 +470,98 @@ command_interface sends data
 
 position, velocity, effort
 
+example using ros2_control and gazebo
+
+<?xml version = "3.0"?>
+
+<!-- The links and joints would go here> 
+
+<gazebo reference = "ref_1">
+    <material>Gazebo/White</material>
+</gazebo>
+
+<gazebo material = "ref_2">
+    <material>Gazebo/Black</material>
+</gazebo>
+
+<robot name = "robot" xmlns:xacro = "http://ros.org/wiki/xacro">
+    <ros2_control name = "GazeboSystem" type = "system">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin> 
+        </hardware>
+
+        <joint name = "joint_name">
+            <command_interface name = "interface_name">
+                <param></param>
+            </command_interface>
+
+            <state_interface name = "interface_name">
+                <param></param>
+            </state_interface>
+        </joint>
+
+    </ros2_control>
+
+    <gazebo>
+        <plugin filename = "libgazebo_ros2_control.so name = "gazebo_ros2_control">
+            <parameters>$(find gazebo_tutorial)/config/joint_controller.yaml</parameters>
+        </plugin>
+    </gazebo>
+</robot>
+    
+So you declare and set the parameters for the joints and then you want to set control with ros2 control for those same joints
+with command interface and state interface
+
+<param> states values 
+
+Yaml file example:
+
+controller manager:
+  ros__parameters:
+    update_rate: 100 #Hz
+
+    joint_trajectory_controller: 
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JoinStateBroadcaster
 
 
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      -
+      -
+      -
+      -
+    interface_name: position
+    command_interfaces:
+      - position 
+    state_interfaces:
+      - position
+      - velocity
+
+We also need to create a joint_publisher.cpp file
+
+So you launch first with the gazebo.launch.py file and then with the joint_publisher.cpp file
 
 
+Using Plotjuggler
 
+sudo apt install ros-humble-plotjuggler
+sudo apt install ros-humble-plotjuggler-ros
 
+ros2 run plotjuggler plotjuggler
 
+or 
+
+run_plotjuggler = ExecuteProcess(
+    cmd = ['ros2', 'run', 'plotjuggler', 'plotjuggler'],
+    output = 'screen',
+    shell = True
+)
+
+graphs are saved as a xml file
+
+You can save and load plot layouts used
 
