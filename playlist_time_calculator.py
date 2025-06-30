@@ -7,9 +7,9 @@ def playlist_time_calculator():
     total_seconds = 0
 
     for i in range(song_count):
-        song = input(f'Enter the length of song {i + 1} with no column: ')
+        song = input(f'Enter the length of song {i + 1} with no column: ').split()
 
-        song_in_seconds = int(song[0]) * 60 + int(song[1:])
+        song_in_seconds = int(song[0]) * 60 + int(song[1])
 
         total_seconds += song_in_seconds
 
