@@ -1,4 +1,5 @@
 import random
+from collections import deque
 
 def maze_generator():
     size = int(input('Enter the desired size for your maze: '))
@@ -36,20 +37,52 @@ def find_path(maze, start_end):
 
     end_row, end_col = start_end[-1]
 
-    maze[start_row][start_col] = '*'
+    rows, cols = len(maze), len(maze[0])
 
-    current_row = start_row
+    explore = deque([(start_row, start_col)])
 
-    current_col = start_col 
+    parents = {(start_row, start_col): None}
 
-    while current_row != end_row and current_col != end_col:
-        if maze[current_row][current_col + 1] == ' ':
-            if current_row 
+    visited = {(start_row, start_col)}
+
+    directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
 
+    while explore:
+        r, c = explore.popleft()
 
-    
+        if (r, c) == (end_row, end_col):
+            
+            while (r, c) is not None:
+                maze[r][c] = '*'
+                r, c = parents[(r, c)]
+            return True
+
+        for dr, dc in directions:
+            nr, nc = r + dr, c + dc
+
+            if 0 <= nr < rows and 0 <= nc < cols and maze[nr][nc] == ' ' and (nr, nc) not in visited:
+                visited.add((nr, nc))
+                
+                parents[(nr, nc)] = (r, c) 
+
+                explore.append((nr, nc))
+
+    return False
 
 def print_maze(maze):
     for row in maze:
         print(' '.join(row))
+
+
+if __name__ == '__main__':
+
+    my_maze, start_end = maze_generator()
+
+    print_maze(my_maze)
+
+    if find_path(my_maze, start_end):
+        print_maze(my_maze)
+
+    else:
+        print('(no path has been found for this maze)')
